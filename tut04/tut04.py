@@ -1,6 +1,10 @@
 import csv
 import os
 import os.path
+from openpyxl import Workbook
+from openpyxl import load_workbook
+
+
 os.system("cls")
 
 def output_by_subject(csv_file):
@@ -19,19 +23,20 @@ def output_by_subject(csv_file):
             if counter==1:
                 header=row
             else:
-                course_path = os.path.join(DIRECTORY, row[3]+".csv")   
+                course_path = os.path.join(DIRECTORY, row[3]+".xlsx")   
                 #appending the new Row to its course file path
                 if os.path.isfile(course_path):
-                    with open(course_path,'a',newline='')as file:
-                        writer=csv.writer(file)
-                        writer.writerow([row[0],row[1],row[3],row[8]])
+                    wb = load_workbook(course_path)
+                    sheet = wb.active
+                    sheet.append([row[0],row[1],row[3],row[8]])
+                    wb.save(course_path)     
                 #creating a file with the course code and writing header row and new row
                 else:
-                    with open(course_path,'w',newline='')as file:
-                        writer=csv.writer(file)
-                        writer.writerow([header[0],header[1],header[3],header[8]])
-                        writer.writerow([row[0],row[1],row[3],row[8]])
-        
+                    wb = Workbook()
+                    sheet = wb.active
+                    sheet.append(['rollno','register_sem','subno','sub_type'])
+                    sheet.append([row[0],row[1],row[3],row[8]])     
+                    wb.save(course_path)    
     return
 
 def output_individual_roll(csv_file):
@@ -50,18 +55,20 @@ def output_individual_roll(csv_file):
             if counter==1:
                 header=row
             else:
-                roll_path = os.path.join(DIRECTORY, row[0]+".csv")   
+                roll_path = os.path.join(DIRECTORY, row[0]+".xlsx")   
                 #appending the new Row to its roll path
                 if os.path.isfile(roll_path):
-                    with open(roll_path,'a',newline='')as file:
-                        writer=csv.writer(file)
-                        writer.writerow([row[0],row[1],row[3],row[8]])           
+                    wb = load_workbook(roll_path)
+                    sheet = wb.active
+                    sheet.append([row[0],row[1],row[3],row[8]])
+                    wb.save(roll_path)     
                 #creating a file with the roll code and writing header row and new row
                 else:
-                    with open(roll_path,'w',newline='')as file:
-                        writer=csv.writer(file)
-                        writer.writerow([header[0],header[1],header[3],header[8]])
-                        writer.writerow([row[0],row[1],row[3],row[8]])
+                    wb = Workbook()
+                    sheet = wb.active
+                    sheet.append(['rollno','register_sem','subno','sub_type'])
+                    sheet.append([row[0],row[1],row[3],row[8]])     
+                    wb.save(roll_path)
     return
 
 
@@ -72,3 +79,4 @@ output_individual_roll(csv_file)
 
 #task2
 output_by_subject(csv_file)
+
